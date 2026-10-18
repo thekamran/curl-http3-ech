@@ -29,25 +29,30 @@ docker pull 1kamran/curl-http3-ech:latest
 
 ## Usage
 
-Run a basic request:
+Print version and enabled features:
 
 ```sh
 docker run --rm 1kamran/curl-http3-ech:latest -V
 ```
 
-Test ECH against Cloudflare:
+Test ECH — uses DoH to fetch the HTTPS RR (which carries the ECHConfig) then
+connects with ECH enabled. `defo.ie` is a reliable ECH test target:
 
 ```sh
 docker run --rm 1kamran/curl-http3-ech:latest \
-  --ech hard --doh-url https://1.1.1.1/dns-query \
-  https://cloudflare.com
+  -sv --ech hard \
+  --doh-url https://1.1.1.1/dns-query \
+  https://defo.ie/ech-check.php
 ```
 
-Test HTTP/3:
+A successful response contains `SSL_ECH_STATUS: success`.
+
+Test HTTP/3 (QUIC):
 
 ```sh
 docker run --rm 1kamran/curl-http3-ech:latest \
-  --http3 https://cloudflare.com
+  --http3-only -sv \
+  https://cloudflare.com/
 ```
 
 ## Build locally
